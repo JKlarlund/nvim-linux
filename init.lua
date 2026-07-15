@@ -20,9 +20,10 @@ vim.opt.rtp:prepend(lazypath)
 -- This is also a good place to setup other settings (vim.opt)
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
-vim.opt.tabstop = 4
-vim.opt.shiftwidth = 4
+vim.opt.tabstop = 2
+vim.opt.shiftwidth = 2
 vim.opt.expandtab = true
+vim.wo.relativenumber = true
 vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float)
 vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
 vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { desc = "Go to declaration" })
@@ -65,8 +66,17 @@ require('lspconfig').coq_lsp.setup({
     cmd = { "opam", "exec", "--", "coq-lsp" },
 })
 
+--For next.js projects-----
+local front_end_servers = { 'tailwindcss', 'jsonls', 'eslint-lsp', 'vtsls'}
+for _, lsp in pairs(front_end_servers) do
+  require('lspconfig')[lsp].setup({
+    on_attach = on_attach,
+    capabilites = capabilities,
+  })
+end
+---------------------------
 
-
+require('render-markdown').setup({})
 
 vim.cmd("colorscheme onedark")
 
