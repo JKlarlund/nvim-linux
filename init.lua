@@ -51,34 +51,23 @@ require("lazy").setup({
 })
 require("neo-tree").setup({})
 
-require('lspconfig')['clangd'].setup({
-  on_attach = on_attach,
-  cmd = { 'clangd' }, 
+-- Server defaults come from nvim-lspconfig's lsp/ configs; only overrides go here.
+vim.lsp.config('clangd', {
   flags = {
     debounce_text_changes = 150
   }
 })
-require('lspconfig').pyright.setup{}
-require('lspconfig').cmake.setup({
-    cmd = { "cmake-language-server" },
-})
-require('lspconfig').coq_lsp.setup({
+vim.lsp.config('coq_lsp', {
     cmd = { "opam", "exec", "--", "coq-lsp" },
 })
 
+vim.lsp.enable({ 'clangd', 'pyright', 'cmake', 'coq_lsp', 'jdtls' })
+
 --For next.js projects-----
-local front_end_servers = { 'tailwindcss', 'jsonls', 'eslint-lsp', 'vtsls'}
-for _, lsp in pairs(front_end_servers) do
-  require('lspconfig')[lsp].setup({
-    on_attach = on_attach,
-    capabilites = capabilities,
-  })
-end
+vim.lsp.enable({ 'tailwindcss', 'jsonls', 'eslint', 'vtsls' })
 ---------------------------
 
 require('render-markdown').setup({})
-
-vim.cmd("colorscheme onedark")
 
 require('lualine').setup {
   options = {
@@ -175,3 +164,8 @@ vim.lsp.handlers["textDocument/hover"] = function(err, result, ctx, config)
 end
 
 vim.keymap.set("n", "<C-t>", "<cmd>ToggleTerm<CR>")
+
+require("live-share").setup({
+  username = "jonathan",
+  max_attempts = 120, -- ~30 s
+})
